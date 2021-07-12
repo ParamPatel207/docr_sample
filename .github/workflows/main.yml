@@ -32,5 +32,5 @@ jobs:
                             "name": "web",
                             "repository": "registry.digitalocean.com/sample-go/add_sample",
                             "tag": "latest"
-                          },
+                          }
                         ]'
