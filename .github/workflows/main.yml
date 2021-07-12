@@ -17,7 +17,7 @@ jobs:
     - name: Publish Image to Container Registry
       uses: ripplr-io/docr-docker-publish@v1
       with:
-        image_path: registry.digitalocean.com/sample-go/app
+        image_path: registry.digitalocean.com/sample-go/add_sample
     - name: DigitalOcean App Platform deployment
       uses: ParamPatel207/app_action@go_attempt
       with:
@@ -26,7 +26,7 @@ jobs:
         list_of_image: '[
                           {
                             "name": "web",
-                            "repository": "registry.digitalocean.com/sample-go/app",
+                            "repository": "registry.digitalocean.com/sample-go/add_sample",
                             "tag": "latest"
                           },
                         ]'
