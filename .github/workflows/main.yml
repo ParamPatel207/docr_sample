@@ -23,10 +23,10 @@ jobs:
       with:
         app_name: sample-golang
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        list_of_image: [
+        list_of_image: '[
                           {
                             "name": "web",
                             "repository": "registry.digitalocean.com/sample-go/app",
                             "tag": "latest"
                           },
-                        ]
+                        ]'
