@@ -15,9 +15,9 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Publish Image to Container Registry
-      uses: bash
+      uses: ripplr-io/docr-docker-publish@v1
       with:
-        image_path: registry.digitalocean.com/sample-go/add_sample
+        image_path: registry.digitalocean.com/sample-go/app
     - name: DigitalOcean App Platform deployment
       uses: ParamPatel207/app_action@go_attempt
       with:
@@ -26,7 +26,7 @@ jobs:
         list_of_image: '[
                           {
                             "name": "web",
-                            "repository": "registry.digitalocean.com/sample-go/add_sample",
+                            "repository": "registry.digitalocean.com/sample-go/app",
                             "tag": "latest"
                           },
                         ]'
