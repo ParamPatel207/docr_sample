@@ -1,55 +1,68 @@
-# Getting Started
+Deploy a [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform/) app using GitHub Actions.
 
-These steps will get this sample Dockerfile application running for you using DigitalOcean App Platform.
+ - Auto-deploy your app from source on commit, while allowing you to run tests or perform other operations this action also allows you to update docr images in the [DigitalOcean App Platform App Spec](https://docs.digitalocean.com/products/app-platform/references/app-specification-reference/).
 
-**Note: Following these steps may result in charges for the use of DigitalOcean services**
+## Example
 
-## Requirements
+ Add your `.do/app.yaml`:
 
-* You need a DigitalOcean account. If you don't already have one, you can sign up at https://cloud.digitalocean.com/registrations/new
-    
-## Deploying the App
+**Note that you should not configure `deploy_on_push: true` for this workflow.**
 
-Click this button to deploy the app to the DigitalOcean App Platform. If you are not logged in, you will be prompted to log in with your DigitalOcean account.
+```yaml
+name: sample-dockerfile
+services:
+- dockerfile_path: Dockerfile
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: digitalocean/sample-dockerfile
+  name: sample-dockerfile
+```
 
-[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/sample-dockerfile/tree/main)
+Create a `.github/workflows/main.yml`:
+- User needs to push docr images to the DigitalOcean Container Registry by following steps below:
+```yaml
+- name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: Generate GITHUB_SHA
+      id: github-sha
+      shell: bash
+      run: |
+        SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+        echo "::set-output name=sha::$SHORT_SHA"
+    - name: Publish Image to Digital Ocean Container Registry
+      shell: bash
+      run: |
+        doctl registry login --expiry-seconds 600
+        docker build . -t registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
+        docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
+```
+*** Note: Always use unique tag names to push image to the DigitalOcean Container Registry. This will allow you to deploy your application without delay. [ref](https://docs.digitalocean.com/products/container-registry/quickstart/) ***
+- Second user needs to run the following command to deploy the app to DigitalOcean App Platform:
 
-Using this button disable the "Auto deploy changes on push" feature as you are using this repo directly. If you wish to try that feature, you will need to make your own copy of this repository.
+## How its using DigitalOcean App Platform App Actions?
 
-To make a copy, click the Fork button above and follow the on-screen instructions. In this case, you'll be forking this repo as a starting point for your own app (see [GitHub documentation](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) to learn more about forking repos.
+This example is using [DigitalOcean App Platform App Actions](https://github.com/ParamPatel207/app_action) in the .github/workflows/main.yml file to auto-deploy your app.
 
-After forking the repo, you should now be viewing this README in your own github org (e.g. `https://github.com/<your-org>/sample-dockerfile`). To deploy the new repo, visit https://cloud.digitalocean.com/apps and click "Create App" or "Launch Your App". Then, select the repository you created and be sure to select the `main` branch.
+```yaml
+ - name: DigitalOcean App Platform deployment
+      uses: ParamPatel207/app_action@main
+      with:
+        app_name: sample-golang
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        list_of_image: '[
+                          {
+                            "name": "web",
+                            "repository": "registry.digitalocean.com/sample-go/add_sample",
+                            "tag": "${{steps.github-sha.outputs.sha}}"
+                          }
+                        ]'
 
-After clicking the "Deploy to DigitalOcean" button or completing the instructions above to fork the repo, follow these steps:
+```
+** \! Note: 
+Because image manifests are cached in different regions, there may be a maximum delay of one hour between pushing to a tag that already exists in your registry and being able to pull the new image by tag. This may happen, for example, when using the :latest tag. To avoid the delay, use:
 
-1. Select which region you wish to deploy your app to and click Next. The closest region to you should be selected by default. All App Platform apps are routed through a global CDN so this will not affect your app performance, unless it needs to talk to external services.
-1. On the following screen, leave all the fields as they are and click Next.
-1. Confirm your Plan settings and how many containers you want to launch and click **Launch Basic/Pro App**.
-1. You should see a "Building..." progress indicator. And you can click "Deployments"→"Details" to see more details of the build.
-1. It can take a few minutes for the build to finish, but you can follow the progress by clicking the "Details" link in the top banner.
-1. Once the build completes successfully, click the "Live App" link in the header and you should see your running application in a new tab, displaying the home page.
-
-## Making Changes to Your App
-
-If you followed the steps above to fork the repo and used your own copy when deploying the app, you can enjoy automatic deploys whenever changes are made to the repo. During these automatic deployments, your application will never pause or stop serving request because App Platform offers zero-downtime deployments.
-
-Here's an example code change you can make for this app:
-
-1. Edit `main.go` and replace the "Hello!" greeting on line 31 with a different greeting.
-1. Commit the change to the `main` branch. Normally it's a better practice to create a new branch for your change and then merge that branch to `main` after review, but for this demo you can commit to the `main` branch directly.
-1. Visit https://cloud.digitalocean.com/apps and navigate to your sample app.
-1. You should see a "Building..." progress indicator, just like when you first created the app.
-1. Once the build completes successfully, click the "Live App" link in the header and you should see your updated application running. You may need to force refresh the page in your browser (e.g. using Shift+Reload).
-
-## Learn More
-
-You can learn more about the App Platform and how to manage and update your application at https://www.digitalocean.com/docs/app-platform/.
-
-## Deleting the App
-
-When you no longer need this sample application running live, you can delete it by following these steps:
-1. Visit the Apps control panel at https://cloud.digitalocean.com/apps
-1. Navigate to the sample app
-1. Choose "Settings"->"Destroy"
-
-**Note: If you don't delete your app, charges for the use of DigitalOcean services will continue to accrue.**
+Unique tags (other than :latest)
+SHA hash of the new manifest
