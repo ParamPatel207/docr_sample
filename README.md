@@ -40,7 +40,6 @@ Create a `.github/workflows/main.yml`:
         docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
 ```
 **Note: Always use unique tag names to push image to the DigitalOcean Container Registry. This will allow you to deploy your application without delay. [ref](https://docs.digitalocean.com/products/container-registry/quickstart/)**
-- Second user needs to run the following command to deploy the app to DigitalOcean App Platform:
 
 ## How its using DigitalOcean App Platform App Actions?
 
@@ -61,7 +60,7 @@ This example is using [DigitalOcean App Platform App Actions](https://github.com
                         ]'
 
 ```
-## \!Note: 
+## Note for handling DigitalOcean Container Registry images: 
 Because image manifests are cached in different regions, there may be a maximum delay of one hour between pushing to a tag that already exists in your registry and being able to pull the new image by tag. This may happen, for example, when using the :latest tag. To avoid the delay, use:
 
 Unique tags (other than :latest)
