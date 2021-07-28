@@ -39,7 +39,7 @@ Create a `.github/workflows/main.yml`:
         docker build . -t registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
         docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
 ```
-*** Note: Always use unique tag names to push image to the DigitalOcean Container Registry. This will allow you to deploy your application without delay. [ref](https://docs.digitalocean.com/products/container-registry/quickstart/) ***
+**Note: Always use unique tag names to push image to the DigitalOcean Container Registry. This will allow you to deploy your application without delay. [ref](https://docs.digitalocean.com/products/container-registry/quickstart/)**
 - Second user needs to run the following command to deploy the app to DigitalOcean App Platform:
 
 ## How its using DigitalOcean App Platform App Actions?
