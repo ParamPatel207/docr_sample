@@ -25,21 +25,21 @@ Create a `.github/workflows/main.yml`:
 **Note: Below example uses git commit sha hash as the image tag which will help for instant deployment to DigitalOcean App Platform.**
 ```yaml
 - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-    - name: Generate GITHUB_SHA
-      id: github-sha
-      shell: bash
-      run: |
-        SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-        echo "::set-output name=sha::$SHORT_SHA"
-    - name: Publish Image to Digital Ocean Container Registry
-      shell: bash
-      run: |
-        doctl registry login --expiry-seconds 600
-        docker build . -t registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
-        docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
+  uses: digitalocean/action-doctl@v2
+  with:
+  token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+- name: Generate GITHUB_SHA
+  id: github-sha
+  shell: bash
+  run: |
+    SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+    echo "::set-output name=sha::$SHORT_SHA"
+- name: Publish Image to Digital Ocean Container Registry
+  shell: bash
+  run: |
+    doctl registry login --expiry-seconds 600
+    docker build . -t registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
+    docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
 ```
 **Note: Always use unique tag names to push image to the DigitalOcean Container Registry. This will allow you to deploy your application without delay. [ref](https://docs.digitalocean.com/products/container-registry/quickstart/)**
 
