@@ -25,11 +25,6 @@ jobs:
         doctl registry login --expiry-seconds 600
         docker build . -t registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
         docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
-        
-    - name: Publish Image to Container Registry
-      uses: ripplr-io/docr-docker-publish@v1
-      with:
-        image_path: sample-go/add_sample
     - name: DigitalOcean App Platform deployment
       uses: ParamPatel207/app_action@main
       with:
