@@ -21,6 +21,7 @@ services:
 
 Create a `.github/workflows/main.yml`:
 - Push docker images to the DigitalOcean Container Registry by following the steps shown below:
+
 **Note: Below example uses github_sha as the image tag which will help for instant deployment to DigitalOcean App Platform.**
 ```yaml
 - name: Install doctl
