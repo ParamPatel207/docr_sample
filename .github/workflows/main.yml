@@ -26,7 +26,7 @@ jobs:
         docker build . -t registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
         docker push registry.digitalocean.com/sample-go/add_sample:${{steps.github-sha.outputs.sha}}
     - name: DigitalOcean App Platform deployment
-      uses: ParamPatel207/app_action@main
+      uses: ParamPatel207/app_action@go_attempt
       with:
         app_name: sample-golang
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
