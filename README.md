@@ -64,4 +64,5 @@ This example is using [DigitalOcean App Platform App Actions](https://github.com
 Because image manifests are cached in different regions, there may be a maximum delay of one hour between pushing to a tag that already exists in your registry and being able to pull the new image by tag. This may happen, for example, when using the :latest tag. To avoid the delay, use:
 
 - Unique tags (other than :latest)
+- SHA hash of Github commit
 - SHA hash of the new manifest
