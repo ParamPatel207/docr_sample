@@ -53,7 +53,7 @@ This example is using [DigitalOcean App Platform App Actions](https://github.com
   with:
     app_name: sample-golang
     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-    list_of_image: '[
+    images: '[
                       {
                         "name": "web",
                         "repository": "registry.digitalocean.com/sample-go/add_sample",
