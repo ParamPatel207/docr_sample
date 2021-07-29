@@ -48,19 +48,18 @@ Create a `.github/workflows/main.yml`:
 This example is using [DigitalOcean App Platform App Actions](https://github.com/ParamPatel207/app_action) in the .github/workflows/main.yml file to auto-deploy your app.
 
 ```yaml
- - name: DigitalOcean App Platform deployment
-   uses: ParamPatel207/app_action@main
-   with:
-     app_name: sample-golang
-     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-     list_of_image: '[
-                       {
-                         "name": "web",
-                         "repository": "registry.digitalocean.com/sample-go/add_sample",
-                         "tag": "${{steps.github-sha.outputs.sha}}"
-                       }
-                     ]'
-
+- name: DigitalOcean App Platform deployment
+ uses: ParamPatel207/app_action@main
+ with:
+   app_name: sample-golang
+   token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+   list_of_image: '[
+                     {
+                       "name": "web",
+                       "repository": "registry.digitalocean.com/sample-go/add_sample",
+                       "tag": "${{steps.github-sha.outputs.sha}}"
+                     }
+                   ]'
 ```
 ## Note for handling DigitalOcean Container Registry images: 
 Because image manifests are cached in different regions, there may be a maximum delay of one hour between pushing to a tag that already exists in your registry and being able to pull the new image by tag. This may happen, for example, when using the :latest tag. To avoid the delay, use:
