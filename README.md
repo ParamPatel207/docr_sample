@@ -49,17 +49,17 @@ This example is using [DigitalOcean App Platform App Actions](https://github.com
 
 ```yaml
  - name: DigitalOcean App Platform deployment
-      uses: ParamPatel207/app_action@main
-      with:
-        app_name: sample-golang
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        list_of_image: '[
-                          {
-                            "name": "web",
-                            "repository": "registry.digitalocean.com/sample-go/add_sample",
-                            "tag": "${{steps.github-sha.outputs.sha}}"
-                          }
-                        ]'
+   uses: ParamPatel207/app_action@main
+   with:
+     app_name: sample-golang
+     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+     list_of_image: '[
+                       {
+                         "name": "web",
+                         "repository": "registry.digitalocean.com/sample-go/add_sample",
+                         "tag": "${{steps.github-sha.outputs.sha}}"
+                       }
+                     ]'
 
 ```
 ## Note for handling DigitalOcean Container Registry images: 
